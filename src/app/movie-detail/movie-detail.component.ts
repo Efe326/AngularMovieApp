@@ -2,24 +2,33 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Movie } from '../movie';
 import { MovieService } from '../movie.service';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'movie-detail',
   templateUrl: './movie-detail.component.html',
   styleUrls: ['./movie-detail.component.css']
 })
-export class MovieDetailComponent implements OnInit{
-  //localhost:4200/detail/2
+export class MovieDetailComponent implements OnInit {
   @Input() movie: Movie | null = null;
 
   constructor(
-    private MovieService: MovieService,
-    private route: ActivatedRoute
+    private movieService: MovieService,
+    private route: ActivatedRoute,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
     this.getMovie();
-    
+  }
+
+  save(): void {
+    if (this.movie) {
+      this.movieService.update(this.movie)
+        .subscribe(() => {
+          this.location.back();
+        });
+    }
   }
 
   getMovie(): void {
@@ -27,8 +36,8 @@ export class MovieDetailComponent implements OnInit{
     
     if (idString) {
       const id = parseInt(idString, 10);
-      this.MovieService.getMovie(id)
+      this.movieService.getMovie(id)
         .subscribe(movie => this.movie = movie);
     }
   }
-}  
+}
