@@ -11,8 +11,13 @@ export class MovieService {
 
   constructor(private loggingService: LoggingService) { }
 
-  getMovies(): Observable<Movie[]>{
+  getMovies(): Observable<Movie[]> {
     this.loggingService.add('MovieService: listing movies');
     return of(Movies);
+  }
+
+  getMovie(id: number): Observable<Movie> {
+    this.loggingService.add('MovieService: get detail by id=' + id);
+    return of(Movies.find(movie => movie.id === id) as Movie); 
   }
 }
